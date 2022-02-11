@@ -26,7 +26,7 @@
         </tbody>
     </table>
     <center>
-        <button class="btn btn-success">Checkout</button>
+        <button class="btn btn-success" onclick="checkoutCart()">Checkout</button>
         <br>
         <br>
         <h3><span id="totalCart"></span></h3>
@@ -34,7 +34,7 @@
 
     <script>
         class Product {
-            constructor(img, productName, price, stock) {
+            constructor(img, productName, price, stock, quantity) {
                 this.img = img
                 this.productName = productName
                 this.price = price
@@ -46,13 +46,19 @@
             calculateTotalPrice = () => {
                 return this.price * this.quantity;
             };
+            
+            checkout = () => {
+                this.stock -= this.quantity
+                this.quantity = 0
+            }
         }
 
         class Underwear extends Product {
-            constructor(img, productName, price, stock) {
-                super(img, productName, price, stock)
+            constructor(img, productName, price, stock, quantity) {
+                super(img, productName, price, stock, quantity)
             }
         }
+
 
         let products = [
             new Underwear(
@@ -79,25 +85,58 @@
                     <td><img width="100px" src="${val.img}"</td>
                     <td>${val.productName}</td>
                     <td>${val.price.toLocaleString()}</td>
-                    <td>${val.stock}</td>   
-                    <td>${val.quantity}</td>
-                    <td><button class="btn btn-secondary">-</button></td>
-                    <td><button class="btn btn-secondary">+</button></td>
+                    <td id="itemstock">${val.stock}</td>   
+                    <td id="itemqty" value="0">${val.quantity}</td>
+                    <td><button class="btn btn-secondary" id="min" onclick="quantityDecrease(${idx})">-</button></td>
+                    <td><button class="btn btn-secondary" id="plus" onclick="quantityIncrease(${idx})">+</button></td>
                 </tr>
                 `;
-                    });
+            });
 
             document.getElementById("productDatabase").innerHTML = htmlResult;
         }
 
         renderData(products)
 
-        const addQuantity = () => {
-            let quantityInCart = 0
+        const quantityIncrease = (productIndex) => {
+            let product = products[productIndex]
 
-            
+            if (product.quantity < product.stock) {
+                product.quantity += 1
+            } else {
+                alert("Quantity tidak boleh melebihi stock")
+            }
+
+            renderData(products)
 
         }
+
+        const quantityDecrease = (productIndex) => {
+        let product = products[productIndex]
+
+        if (product.quantity > 0) {
+             product.quantity -= 1 
+            } else {
+            alert("Quantity tidak boleh kurang stock") 
+            } 
+
+        renderData(products) 
+        }
+
+        const checkoutCart = () => {
+        let totalCart = 0;
+        let showTotalPrice = `Total Belanja anda: Rp.`;
+        
+        products.forEach((val) => {
+            totalCart += val.calculateTotalPrice()
+            val.checkout()
+        })
+
+        document.getElementById("totalCart").innerHTML = showTotalPrice + totalCart.toLocaleString()
+        renderData(products)
+    }
+            
+
     </script>
 
 </body>
