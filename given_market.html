@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <title>Document</title>
+</head>
+
+<body class="container">
+    <table class="table text-center">
+        <thead>
+            <tr>
+                <th>Product Image</th>
+                <th>Product Name</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Quantity in Cart</th>
+                <th colspan="2">Cart Actions</th>
+            </tr>
+        </thead>
+        <tbody id="productDatabase">
+        </tbody>
+    </table>
+    <center>
+        <button class="btn btn-success">Checkout</button>
+        <br>
+        <br>
+        <h3><span id="totalCart"></span></h3>
+    </center>
+
+    <script>
+        class Product {
+            constructor(img, productName, price, stock) {
+                this.img = img
+                this.productName = productName
+                this.price = price
+                this.stock = stock
+                this.quantity = 0
+
+            }
+
+            calculateTotalPrice = () => {
+                return this.price * this.quantity;
+            };
+        }
+
+        class Underwear extends Product {
+            constructor(img, productName, price, stock) {
+                super(img, productName, price, stock)
+            }
+        }
+
+        let products = [
+            new Underwear(
+                "https://images.tokopedia.net/img/cache/500-square/product-1/2020/6/25/batch-upload/batch-upload_b626820b-2b4a-417d-8f72-0410244e952f",
+                "Kanchoot Katun",
+                120000,
+                10,
+                0
+            ),
+            new Underwear("https://s3.bukalapak.com/img/31886673662/s-330-330/data.png.webp",
+                "Kanchoot Corduroy",
+                700900,
+                10,
+                0
+            ),
+        ]
+
+        const renderData = (dataToRender = []) => {
+            let htmlResult = "";
+
+            dataToRender.forEach((val, idx) => {
+                htmlResult += `
+                <tr style="vertical-align: middle;">
+                    <td><img width="100px" src="${val.img}"</td>
+                    <td>${val.productName}</td>
+                    <td>${val.price.toLocaleString()}</td>
+                    <td>${val.stock}</td>   
+                    <td>${val.quantity}</td>
+                    <td><button class="btn btn-secondary">-</button></td>
+                    <td><button class="btn btn-secondary">+</button></td>
+                </tr>
+                `;
+                    });
+
+            document.getElementById("productDatabase").innerHTML = htmlResult;
+        }
+
+        renderData(products)
+
+        const addQuantity = () => {
+            let quantityInCart = 0
+
+            
+
+        }
+    </script>
+
+</body>
+
+</html>
