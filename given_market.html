@@ -29,12 +29,18 @@
         <button class="btn btn-success" onclick="checkoutCart()">Checkout</button>
         <br>
         <br>
+        <div id="checkout">
         <h3><span id="totalCart"></span></h3>
+        <br>
+        <h3><span id="timer"></span></h3>
+        <br>
+        <h3><span id="paymentValue"></span></h3>
+        </div>
     </center>
 
     <script>
         class Product {
-            constructor(img, productName, price, stock, quantity) {
+            constructor(img, productName, price, stock) {
                 this.img = img
                 this.productName = productName
                 this.price = price
@@ -46,7 +52,7 @@
             calculateTotalPrice = () => {
                 return this.price * this.quantity;
             };
-            
+
             checkout = () => {
                 this.stock -= this.quantity
                 this.quantity = 0
@@ -54,8 +60,8 @@
         }
 
         class Underwear extends Product {
-            constructor(img, productName, price, stock, quantity) {
-                super(img, productName, price, stock, quantity)
+            constructor(img, productName, price, stock) {
+                super(img, productName, price, stock)
             }
         }
 
@@ -76,6 +82,7 @@
             ),
         ]
 
+
         const renderData = (dataToRender = []) => {
             let htmlResult = "";
 
@@ -86,9 +93,9 @@
                     <td>${val.productName}</td>
                     <td>${val.price.toLocaleString()}</td>
                     <td id="itemstock">${val.stock}</td>   
-                    <td id="itemqty" value="0">${val.quantity}</td>
-                    <td><button class="btn btn-secondary" id="min" onclick="quantityDecrease(${idx})">-</button></td>
-                    <td><button class="btn btn-secondary" id="plus" onclick="quantityIncrease(${idx})">+</button></td>
+                    <td id="itemqty">${val.quantity}</td>
+                    <td><button class="btn btn-secondary" id="min" onclick="editCart(${idx},'decrement')">-</button></td>
+                    <td><button class="btn btn-secondary" id="plus" onclick="editCart(${idx}, 'increment')">+</button></td>
                 </tr>
                 `;
             });
@@ -98,43 +105,104 @@
 
         renderData(products)
 
-        const quantityIncrease = (productIndex) => {
-            let product = products[productIndex]
+        const editCart = (productIdx, editType) => {
+            const product = products[productIdx]
 
-            if (product.quantity < product.stock) {
-                product.quantity += 1
-            } else {
-                alert("Quantity tidak boleh melebihi stock")
+            if (editType == "increment") {
+                if (product.quantity < product.stock) {
+                    product.quantity += 1
+                    renderData(products)
+                } else {
+                    alert("Quantity cart tidak boleh melebihi jumlah stock yang tersedia")
+                }
+            } else if (editType == "decrement") {
+                if (product.quantity > 0) {
+                    product.quantity -= 1
+
+                    renderData(products)
+                } else {
+                    alert("Quantity cart tidak boleh kurang dari 0")
+                }
             }
 
-            renderData(products)
-
         }
 
-        const quantityDecrease = (productIndex) => {
-        let product = products[productIndex]
+            let totalCart;
 
-        if (product.quantity > 0) {
-             product.quantity -= 1 
-            } else {
-            alert("Quantity tidak boleh kurang stock") 
-            } 
-
-        renderData(products) 
-        }
+            let stopwatch
 
         const checkoutCart = () => {
-        let totalCart = 0;
-        let showTotalPrice = `Total Belanja anda: Rp.`;
-        
-        products.forEach((val) => {
-            totalCart += val.calculateTotalPrice()
-            val.checkout()
-        })
-
-        document.getElementById("totalCart").innerHTML = showTotalPrice + totalCart.toLocaleString()
+            
+            totalCart = 0
+            let showTotalPrice = `Total Belanja anda: Rp.`;
+            
+            products.forEach((val) => {
+                totalCart += val.calculateTotalPrice()
+            })
+            
+            document.getElementById("totalCart").innerHTML = showTotalPrice + totalCart.toLocaleString()
+            
+            document.getElementById("paymentValue").innerHTML =
+            "<input type='text' class='w-25 p-2 form-control' id='paymentInput'> <br> <button id='pay' class='btn btn-primary' onclick='pay()'>Pay</button>"
+            
+            document.getElementById("timer").innerHTML = `sisa waktu untuk bayar :10`
+            
+            let seconds = 10
+            stopwatch = setInterval(() => {
+                seconds = parseInt(seconds)
+                seconds -= 1
+                document.getElementById("timer").innerHTML = `sisa waktu untuk bayar : ${seconds}`
+                
+                if(seconds == 0){
+                    stopTimer()
+                    alert("waktu anda telah habis, barang tidak berhasil dicheckout")
+                    document.getElementById("paymentValue").innerHTML = ""
+                    document.getElementById("timer").innerHTML = ""
+                    document.getElementById("totalCart").innerHTML = ""
+                    
+                }
+            }, 1000)
+            
         renderData(products)
-    }
+        }
+            
+            const pay = () => {
+                let value = document.getElementById("paymentInput").value
+                let total = 0
+                value = parseInt(value)
+                total = parseInt(total)
+
+                products.forEach((val,idx) => {
+                    total += val.calculateTotalPrice()
+                })
+
+                
+                if(total == value){
+                    stopTimer()
+                    alert("Pembayaran berhasil, terimakasih telah berbelanja!")
+                    renderData(products)
+                }else if(total < value){
+                    stopTimer()
+                    alert(`pembayaran berhasil, kembalian anda sebesar ${(value - total).toLocaleString()}`)
+                }else if (total > value){
+                    alert("pembayaran anda kurang")
+                    return
+                }
+
+                products.forEach((val,idx) => {
+                val.checkout()
+                })
+                renderData(products)
+                document.getElementById("paymentValue").innerHTML = ""
+                document.getElementById("timer").innerHTML = ""
+                document.getElementById("totalCart").innerHTML = ""
+
+
+            }
+
+        const stopTimer = () => {
+            clearInterval(stopwatch)
+        }
             
 
     </script>
