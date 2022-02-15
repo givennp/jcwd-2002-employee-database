@@ -53,21 +53,21 @@ console.log(alphabetValue("mantap"));
 // Input: "abc"
 // Output: 4
 
-// const oddAlphabetValue = (string) => {
+const oddAlphabetValue = (string) => {
     
-//         let result = 0
+        let result = 0
 
-//         for (let i = 0; i < string.split("").length; i++) {
-//             if()
+        for (let i = 0; i < string.split("").length; i++) {
+            if (!((alphabetArr.indexOf(string[i]) + 1) % 2 == 0))
 
-//             result += alphabetArr.indexOf(string[i]) + 1
-//         }
-//         return result
+            result += alphabetArr.indexOf(string[i]) + 1
+        }
+        return result
 
-// }
+}
 
 
-
+console.log(oddAlphabetValue("fortinaitilababaji"));
 
 // 4. Unique items
 // Diketahui ada 2 array of numbers, dimana 2 array tersebut memiliki beberapa
