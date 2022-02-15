@@ -135,10 +135,16 @@
             
             totalCart = 0
             let showTotalPrice = `Total Belanja anda: Rp.`;
+            let quantity
             
-            products.forEach((val) => {
+            products.forEach((val, idx) => {
                 totalCart += val.calculateTotalPrice()
+                
             })
+                if(totalCart == 0){
+                    alert("belum ada item di cart!")
+                    return
+                }
             
             document.getElementById("totalCart").innerHTML = showTotalPrice + totalCart.toLocaleString()
             
@@ -153,7 +159,7 @@
                 seconds -= 1
                 document.getElementById("timer").innerHTML = `sisa waktu untuk bayar : ${seconds}`
                 
-                if(seconds == 0){
+                if(seconds <= 0){
                     stopTimer()
                     alert("waktu anda telah habis, barang tidak berhasil dicheckout")
                     document.getElementById("paymentValue").innerHTML = ""
