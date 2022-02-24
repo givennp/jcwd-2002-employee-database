@@ -156,12 +156,8 @@
 
       let filteredData = employeeDatabase.filter((val) => {
         return (
-          val.fullName
-          .toLowerCase()
-          .includes(searchEmployeeNameValue.toLowerCase()) &&
-          val.occupation
-          .toLowerCase()
-          .includes(searchEmployeeOccupationValue.toLowerCase())
+          val.fullName.toLowerCase().includes(searchEmployeeNameValue.toLowerCase()) &&
+          val.occupation.toLowerCase().includes(searchEmployeeOccupationValue.toLowerCase())
         );
       });
 
@@ -225,9 +221,8 @@
 
     const resetSort = () => {
       renderData(employeeDatabase)
-    
-    }
 
+    }
   </script>
 </body>
 

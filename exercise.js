@@ -7,7 +7,7 @@ const removeVowels = (string) => {
     let result = ""
 
     for (let i = 0; i < string.length; i++) {
-        if (!vocal.includes(string[i])) {
+        if (!vocal.includes(string[i].toLowerCase())) {
             result += string[i]
         }
     }
@@ -15,7 +15,7 @@ const removeVowels = (string) => {
 
 }
 
-console.log(removeVowels("jametkudasi"));
+console.log(removeVowels("jametkudaSI"));
 
 
 // 2. Alphabet value
@@ -79,18 +79,21 @@ console.log(oddAlphabetValue("fortinaitilababaji"));
 // arr2 = [1, 5, 3, 7, 0]
 // Output: [5, 4, 0]
 
-    const uniqueItem = (arr1, arr2) => {
+    const uniqueItem = (arr1 = [], arr2 = []) => {
         let result = [];
-        for (let i = 0; i < arr1.length; i++) {
-            if (arr2.indexOf(arr1[i]) === -1) {
-                result.push(arr1[i]);
+        
+        arr1.forEach((val) => {
+            if(!arr2.includes(val)){
+                result.push(val)
             }
-        }
-        for (i = 0; i < arr2.length; i++) {
-            if (arr1.indexOf(arr2[i]) === -1) {
-                result.push(arr2[i]);
+        })
+
+        arr2.forEach((val) => {
+            if (!arr1.includes(val)) {
+                result.push(val)
             }
-        }
+        })
+
         return result;
     }
 
@@ -118,3 +121,29 @@ const removeDuplicates = (value, idx, arr) => {
 const remove = arr3.filter(removeDuplicates)
 
 console.log(remove)
+
+//   for (var i = 0; i < 6; i++) {
+//       var str = '';
+//       for (var j = 1; j < 6 - i; j++) {
+//           str = str + ' ';
+//       }
+//       for (var k = 1; k <= (2 * i + 1); k++) {
+//           str = str + '*';
+//       }
+//       console.log(str);
+//   }
+
+function find_average(array) {
+    // your code here
+    var total = 0;
+
+    for (var i in array) {
+        if (array[i] > 0) {
+            total += array[i];
+        }
+    }
+    let final = total / array.length
+    return final
+}
+
+console.log(find_average([1, 2, 3]));
